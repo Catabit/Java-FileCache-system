@@ -42,7 +42,6 @@ public class LRUCache<K, V> extends ObservableCache<K, V> {
                 first = r;
             }
 
-
             return result;
         }
         cacheListener.onMiss(key);
@@ -82,9 +81,9 @@ public class LRUCache<K, V> extends ObservableCache<K, V> {
             first = newNode;
             hash.put(key, newNode);
         }
+
         clearStaleEntries();
         cacheListener.onPut(key, value);
-
     }
 
     @Override
@@ -107,6 +106,8 @@ public class LRUCache<K, V> extends ObservableCache<K, V> {
             //remove it from the linked list
             if (r.prev != null) {
                 r.prev.next = r.next;
+            } else {
+                first = null;
             }
             if (r.next != null) {
                 r.next.prev = r.prev;
@@ -127,7 +128,10 @@ public class LRUCache<K, V> extends ObservableCache<K, V> {
 
     @Override
     public Pair<K, V> getEldestEntry() {
-        return last.info;
+        if (last != null) {
+            return last.info;
+        }
+        return null;
     }
 
 

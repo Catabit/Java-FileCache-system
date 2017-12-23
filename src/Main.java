@@ -81,9 +81,7 @@ public final class Main {
             switch (tokens[0]) {
                 case DELAY_COMMAND:
                     long parameter = Long.parseLong(tokens[1]);
-
                     Thread.sleep(parameter);
-
                     break;
                 case GET_COMMAND:
                     System.out.println(cache.getFileContents(tokens[1]));

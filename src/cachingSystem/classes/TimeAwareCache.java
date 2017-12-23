@@ -4,8 +4,7 @@ import cachingSystem.interfaces.CacheStalePolicy;
 import dataStructures.classes.Pair;
 
 import java.sql.Timestamp;
-import java.time.Instant;
-import java.util.HashMap;
+import java.util.*;
 
 /**
  * The TimeAwareCache offers the same functionality as the LRUCache, but also stores a timestamp for
@@ -15,12 +14,18 @@ import java.util.HashMap;
  */
 public class TimeAwareCache<K, V> extends LRUCache<K, V> {
 
-    private HashMap<K, Timestamp> times = new HashMap<>();
+    private TreeMap<K, Timestamp> times = new TreeMap<>();
 
     @Override
     public void put(K key, V value) {
-        super.put(key, value);
-        setTimestampOfKey(key, Timestamp.from(Instant.now()));
+        if (!times.containsKey(key)) {
+            setTimestampOfKey(key, new Timestamp(System.currentTimeMillis()));
+            super.put(key, value);
+        } else {
+            super.put(key, value);
+            setTimestampOfKey(key, new Timestamp(System.currentTimeMillis()));
+        }
+        clearStaleEntries();
     }
 
     @Override
@@ -28,6 +33,27 @@ public class TimeAwareCache<K, V> extends LRUCache<K, V> {
         times.remove(key);
         return super.remove(key);
     }
+
+    @Override
+    public V get(K key) {
+        if (!isEmpty())
+            clearStaleEntries();
+        //setTimestampOfKey(key, new Timestamp(System.currentTimeMillis()));
+        return super.get(key);
+    }
+
+    /*@Override
+    public Pair<K, V> getEldestEntry() {
+        List<Map.Entry<K, Timestamp>> list = new LinkedList<>(times.entrySet());
+        Collections.sort(list, new Comparator<Map.Entry<K, Timestamp>>() {
+            @Override
+            public int compare(Map.Entry<K, Timestamp> o1, Map.Entry<K, Timestamp> o2) {
+                return (int) (o1.getValue().getTime() - o2.getValue().getTime());
+            }
+        });
+        //System.out.println("ELDEST " + list.get(0).getKey());
+        return new Pair<>(list.get(0).getKey(), get(list.get(0).getKey()));
+    }*/
 
     /**
      * Get the timestamp associated with a key, or null if the key is not stored in the cache.
@@ -41,6 +67,7 @@ public class TimeAwareCache<K, V> extends LRUCache<K, V> {
 
     private void setTimestampOfKey(K key, Timestamp t) {
         times.put(key, t);
+        System.out.println("UPDATE " + key + " " + t.getTime());
     }
 
     /**
@@ -53,9 +80,13 @@ public class TimeAwareCache<K, V> extends LRUCache<K, V> {
         CacheStalePolicy<K, V> stalePolicy = new CacheStalePolicy<K, V>() {
             @Override
             public boolean shouldRemoveEldestEntry(Pair<K, V> entry) {
-                long treshHoldTime = Timestamp.from(Instant.now()).getTime();
-                treshHoldTime -= millisToExpire; //todo might require <=
-                if (getTimestampOfKey(entry.getKey()).getTime() < treshHoldTime) {
+                // System.out.println(getTimestampOfKey(entry.getKey()).getTime() + " - " + System.currentTimeMillis() +
+                //         " = " + (getTimestampOfKey(entry.getKey()).getTime() - System.currentTimeMillis()));
+                // System.out.println(millisToExpire);
+                if (entry == null) {
+                    return false;
+                }
+                if (System.currentTimeMillis() - getTimestampOfKey(entry.getKey()).getTime() > millisToExpire) {
                     return true;
                 }
                 return false;
