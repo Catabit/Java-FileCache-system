@@ -71,7 +71,6 @@ public final class Main {
 
         while (commandIterator.hasNext()) {
             String command = commandIterator.next().trim();
-            //System.out.println("Working on: " + command);
             String[] tokens = command.split(" ");
 
             if (command.isEmpty() || command.startsWith("#")) {
@@ -87,9 +86,6 @@ public final class Main {
 
                     break;
                 case GET_COMMAND:
-                    //todo remove these
-                    // String s = cache.getFileContents(tokens[1]);
-                    //s.trim();
                     System.out.println(cache.getFileContents(tokens[1]));
 
                     break;

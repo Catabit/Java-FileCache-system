@@ -1,7 +1,6 @@
 package cachingSystem.classes;
 
 import dataStructures.classes.Pair;
-
 import java.util.HashMap;
 
 /**
@@ -43,29 +42,6 @@ public class LRUCache<K, V> extends ObservableCache<K, V> {
             first = r;
             r.prev = null;
 
-            /*
-            //remove it from the list
-            if (r.prev != null) {
-                r.prev.next = r.next;
-            }
-            if (r.next != null) {
-                r.next.prev = r.prev;
-            } else {
-                last = last.prev;
-                if (last != null) {
-                    last.next = null;
-                }
-            }
-
-            //add it to the front of the list
-            r.prev = null;
-            r.next = first; //todo might be an issue if first is null
-            if (first != null) {
-                first.prev = r;
-                first = r;
-            }
-            */
-
             return result;
         }
         cacheListener.onMiss(key);
@@ -96,28 +72,6 @@ public class LRUCache<K, V> extends ObservableCache<K, V> {
                 first.prev = r;
                 first = r;
                 r.prev = null;
-            /*
-            //if is last
-            Node r = hash.get(key);
-            //remove it from the list
-            if (r.prev != null) {
-                r.prev.next = r.next;
-            }
-            if (r.next != null) {
-                r.next.prev = r.prev;
-            } else {
-                last = last.prev;
-                last.next = null;
-            }
-
-            //add it to the front of the list
-            r.prev = null;
-            r.next = first;
-            first.prev = r;
-            first = r;
-
-            r.info.setValue(value);
-*/
             }
         } else {
             Node newNode = new Node(new Pair<>(key, value));
@@ -127,19 +81,11 @@ public class LRUCache<K, V> extends ObservableCache<K, V> {
                 first.prev = newNode;
             }
             first = newNode;
-            /*
-            if (first != null) {
-                first.prev = newNode;
-            }
-            if (first == null && last == null) { // empty list
-                last = newNode;
-            }
-            first = newNode;*/
+
             hash.put(key, newNode);
             if (size() == 1) {
                 last = newNode;
             }
-
         }
 
         clearStaleEntries();
@@ -163,21 +109,10 @@ public class LRUCache<K, V> extends ObservableCache<K, V> {
             result = hash.get(key).info.getValue();
 
             last = last.prev;
-            last.next = null;
-
-            /*Node r = hash.get(key);
-
-            //remove it from the linked list
-            if (r.prev != null) {
-                r.prev.next = r.next;
-            } else {
-                first = null;
+            if (last != null) {
+                last.next = null;
             }
-            if (r.next != null) {
-                r.next.prev = r.prev;
-            } else {
-                last = last.prev;
-            }*/
+
             hash.remove(key);
         }
         return result;
@@ -206,26 +141,6 @@ public class LRUCache<K, V> extends ObservableCache<K, V> {
 
         Node(final Pair<K, V> inInfo) {
             this.info = inInfo;
-        }
-
-        public Pair<K, V> getInfo() {
-            return info;
-        }
-
-        public void setNext(Node next) {
-            this.next = next;
-        }
-
-        public void setPrev(Node prev) {
-            this.prev = prev;
-        }
-
-        public Node getNext() {
-            return next;
-        }
-
-        public Node getPrev() {
-            return prev;
         }
     }
 }
