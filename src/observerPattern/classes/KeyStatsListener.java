@@ -12,6 +12,22 @@ import observerPattern.interfaces.CacheListener;
  */
 public class KeyStatsListener<K, V> implements CacheListener<K, V> {
 
+
+    @Override
+    public void onHit(K key) {
+
+    }
+
+    @Override
+    public void onMiss(K key) {
+
+    }
+
+    @Override
+    public void onPut(K key, V value) {
+
+    }
+
     /**
      * Get the number of hits for a key.
      *
@@ -20,6 +36,7 @@ public class KeyStatsListener<K, V> implements CacheListener<K, V> {
      */
     public int getKeyHits(K key) {
         /* TODO: implement getKeyHits */
+        return 0;
     }
 
     /**
@@ -30,6 +47,7 @@ public class KeyStatsListener<K, V> implements CacheListener<K, V> {
      */
     public int getKeyMisses(K key) {
         /* TODO: implement getKeyMisses */
+        return 0;
     }
 
     /**
@@ -40,6 +58,7 @@ public class KeyStatsListener<K, V> implements CacheListener<K, V> {
      */
     public int getKeyUpdates(K key) {
         /* TODO: implement getKeyUpdates */
+        return 0;
     }
 
     /**
@@ -50,6 +69,7 @@ public class KeyStatsListener<K, V> implements CacheListener<K, V> {
      */
     public List<K> getTopHitKeys(int top) {
         /* TODO: implement getTopHitKeys */
+        return null;
     }
 
     /**
@@ -60,6 +80,7 @@ public class KeyStatsListener<K, V> implements CacheListener<K, V> {
      */
     public List<K> getTopMissedKeys(int top) {
         /* TODO: implement getTopMissedKeys */
+        return null;
     }
 
     /**
@@ -70,6 +91,7 @@ public class KeyStatsListener<K, V> implements CacheListener<K, V> {
      */
     public List<K> getTopUpdatedKeys(int top) {
         /* TODO: implement getTopUpdatedKeys */
+        return null;
     }
 
     /* TODO: implement the CacheListener interface */

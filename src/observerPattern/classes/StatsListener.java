@@ -10,13 +10,32 @@ import observerPattern.interfaces.CacheListener;
  */
 public class StatsListener<K, V> implements CacheListener<K, V> {
 
+    private int hits = 0;
+    private int misses = 0;
+    private int puts = 0;
+
+    @Override
+    public void onHit(K key) {
+        hits++;
+    }
+
+    @Override
+    public void onMiss(K key) {
+        misses++;
+    }
+
+    @Override
+    public void onPut(K key, V value) {
+        puts++;
+    }
+
     /**
      * Get the number of hits for the cache.
      *
      * @return number of hits
      */
     public int getHits() {
-        /* TODO: implement getHits */
+        return hits;
     }
 
     /**
@@ -25,7 +44,7 @@ public class StatsListener<K, V> implements CacheListener<K, V> {
      * @return number of misses
      */
     public int getMisses() {
-        /* TODO: implement getMisses */
+        return misses;
     }
 
     /**
@@ -34,7 +53,7 @@ public class StatsListener<K, V> implements CacheListener<K, V> {
      * @return number of updates
      */
     public int getUpdates() {
-        /* TODO: implement getUpdates */
+        return puts;
     }
 
     /* TODO: Implement the CacheListener interface */

@@ -9,6 +9,11 @@ import dataStructures.classes.Pair;
 import observerPattern.classes.BroadcastListener;
 import observerPattern.interfaces.CacheListener;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.Reader;
+
 public final class FileCache {
 
     public enum Strategy {
@@ -69,7 +74,21 @@ public final class FileCache {
 
             @Override
             public void onMiss(String key) {
-
+                try {
+                    Reader fr = new FileReader(key);
+                    StringBuilder sb = new StringBuilder();
+                    int next;
+                    next = fr.read();
+                    while (next != -1) {
+                        sb.append((char) next);
+                        next = fr.read();
+                    }
+                    dataCache.put(key, sb.toString());
+                } catch (FileNotFoundException excp) {
+                    System.out.println("File not found!");
+                } catch (java.io.IOException excp) {
+                    System.out.println("IO Exception!");
+                }
             }
 
             @Override
