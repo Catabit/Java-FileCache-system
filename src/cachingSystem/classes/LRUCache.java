@@ -22,25 +22,49 @@ public class LRUCache<K, V> extends ObservableCache<K, V> {
             cacheListener.onHit(key);
 
             Node r = hash.get(key);
-            if (r != first) {
-                //remove it from the list
-                if (r.prev != null) {
-                    r.prev.next = r.next;
-                }
-                if (r.next != null) {
-                    r.next.prev = r.prev;
-                }
 
-                if (r == last) {
-                    last = last.prev;
-                }
+            if (r == first) {
+                return result;
+            }
 
-                //add it to the front of the list
-                r.prev = null;
-                r.next = first; //todo might be an issue if first is null
+            Node prev = r.prev;
+            Node next = r.next;
+
+            if (r == last) {
+                prev.next = null;
+                last = prev;
+            } else {
+                prev.next = next;
+                next.prev = prev;
+            }
+
+            r.next = first;
+            first.prev = r;
+            first = r;
+            r.prev = null;
+
+            /*
+            //remove it from the list
+            if (r.prev != null) {
+                r.prev.next = r.next;
+            }
+            if (r.next != null) {
+                r.next.prev = r.prev;
+            } else {
+                last = last.prev;
+                if (last != null) {
+                    last.next = null;
+                }
+            }
+
+            //add it to the front of the list
+            r.prev = null;
+            r.next = first; //todo might be an issue if first is null
+            if (first != null) {
                 first.prev = r;
                 first = r;
             }
+            */
 
             return result;
         }
@@ -51,6 +75,29 @@ public class LRUCache<K, V> extends ObservableCache<K, V> {
     @Override
     public void put(K key, V value) {
         if (hash.containsKey(key)) {
+            hash.get(key).info.setValue(value);
+
+            Node r = hash.get(key);
+
+            if (r != first) {
+
+                Node prev = r.prev;
+                Node next = r.next;
+
+                if (r == last) {
+                    prev.next = null;
+                    last = prev;
+                } else {
+                    prev.next = next;
+                    next.prev = prev;
+                }
+
+                r.next = first;
+                first.prev = r;
+                first = r;
+                r.prev = null;
+            /*
+            //if is last
             Node r = hash.get(key);
             //remove it from the list
             if (r.prev != null) {
@@ -58,6 +105,9 @@ public class LRUCache<K, V> extends ObservableCache<K, V> {
             }
             if (r.next != null) {
                 r.next.prev = r.prev;
+            } else {
+                last = last.prev;
+                last.next = null;
             }
 
             //add it to the front of the list
@@ -67,7 +117,8 @@ public class LRUCache<K, V> extends ObservableCache<K, V> {
             first = r;
 
             r.info.setValue(value);
-
+*/
+            }
         } else {
             Node newNode = new Node(new Pair<>(key, value));
             newNode.prev = null;
@@ -75,11 +126,20 @@ public class LRUCache<K, V> extends ObservableCache<K, V> {
             if (first != null) {
                 first.prev = newNode;
             }
+            first = newNode;
+            /*
+            if (first != null) {
+                first.prev = newNode;
+            }
             if (first == null && last == null) { // empty list
                 last = newNode;
             }
-            first = newNode;
+            first = newNode;*/
             hash.put(key, newNode);
+            if (size() == 1) {
+                last = newNode;
+            }
+
         }
 
         clearStaleEntries();
@@ -101,7 +161,11 @@ public class LRUCache<K, V> extends ObservableCache<K, V> {
         V result = null;
         if (hash.containsKey(key)) {
             result = hash.get(key).info.getValue();
-            Node r = hash.get(key);
+
+            last = last.prev;
+            last.next = null;
+
+            /*Node r = hash.get(key);
 
             //remove it from the linked list
             if (r.prev != null) {
@@ -113,7 +177,7 @@ public class LRUCache<K, V> extends ObservableCache<K, V> {
                 r.next.prev = r.prev;
             } else {
                 last = last.prev;
-            }
+            }*/
             hash.remove(key);
         }
         return result;

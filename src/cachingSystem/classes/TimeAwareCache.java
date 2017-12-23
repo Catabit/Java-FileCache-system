@@ -67,7 +67,6 @@ public class TimeAwareCache<K, V> extends LRUCache<K, V> {
 
     private void setTimestampOfKey(K key, Timestamp t) {
         times.put(key, t);
-        System.out.println("UPDATE " + key + " " + t.getTime());
     }
 
     /**

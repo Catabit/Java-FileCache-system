@@ -78,12 +78,18 @@ public final class Main {
                 continue;
             }
 
+
             switch (tokens[0]) {
                 case DELAY_COMMAND:
                     long parameter = Long.parseLong(tokens[1]);
+
                     Thread.sleep(parameter);
+
                     break;
                 case GET_COMMAND:
+                    //todo remove these
+                    // String s = cache.getFileContents(tokens[1]);
+                    //s.trim();
                     System.out.println(cache.getFileContents(tokens[1]));
 
                     break;
