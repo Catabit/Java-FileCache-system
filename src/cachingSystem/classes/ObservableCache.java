@@ -13,13 +13,16 @@ import observerPattern.interfaces.CacheListener;
  */
 public abstract class ObservableCache<K, V> implements Cache<K, V> {
 
+    private CacheStalePolicy<K, V> stalePolicy;
+    private CacheListener<K, V> cacheListener;
+
     /**
      * Set a policy for removing stale elements from the cache.
      *
      * @param stalePolicy
      */
     public void setStalePolicy(CacheStalePolicy<K, V> stalePolicy) {
-        /* TODO: implement setStalePolicy */
+        this.stalePolicy = stalePolicy;
     }
 
     /**
@@ -28,7 +31,7 @@ public abstract class ObservableCache<K, V> implements Cache<K, V> {
      * @param cacheListener
      */
     public void setCacheListener(CacheListener<K, V> cacheListener) {
-        /* TODO: implement setCacheListener */
+        this.cacheListener = cacheListener;
     }
 
     /**
@@ -36,6 +39,8 @@ public abstract class ObservableCache<K, V> implements Cache<K, V> {
      *
      */
     public void clearStaleEntries() {
-        /* TODO: implement clearStaleEntries */
+        while (stalePolicy.shouldRemoveEldestEntry(getEldestEntry())) {
+            remove(getEldestEntry().getKey());
+        }
     }
 }
