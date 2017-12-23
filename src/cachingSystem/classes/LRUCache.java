@@ -19,8 +19,32 @@ public class LRUCache<K, V> extends ObservableCache<K, V> {
     @Override
     public V get(K key) {
         if (hash.containsKey(key)) {
+            V result = hash.get(key).info.getValue();
             cacheListener.onHit(key);
-            return hash.get(key).info.getValue();
+
+            Node r = hash.get(key);
+            if (r != first) {
+                //remove it from the list
+                if (r.prev != null) {
+                    r.prev.next = r.next;
+                }
+                if (r.next != null) {
+                    r.next.prev = r.prev;
+                }
+
+                if (r == last) {
+                    last = last.prev;
+                }
+
+                //add it to the front of the list
+                r.prev = null;
+                r.next = first; //todo might be an issue if first is null
+                first.prev = r;
+                first = r;
+            }
+
+
+            return result;
         }
         cacheListener.onMiss(key);
         return null;
@@ -40,9 +64,11 @@ public class LRUCache<K, V> extends ObservableCache<K, V> {
 
             //add it to the front of the list
             r.prev = null;
-            r.next = first; //todo might be an issue if first is null
+            r.next = first;
             first.prev = r;
             first = r;
+
+            r.info.setValue(value);
 
         } else {
             Node newNode = new Node(new Pair<>(key, value));
@@ -55,7 +81,9 @@ public class LRUCache<K, V> extends ObservableCache<K, V> {
                 last = newNode;
             }
             first = newNode;
+            hash.put(key, newNode);
         }
+        clearStaleEntries();
         cacheListener.onPut(key, value);
 
     }
@@ -83,6 +111,8 @@ public class LRUCache<K, V> extends ObservableCache<K, V> {
             }
             if (r.next != null) {
                 r.next.prev = r.prev;
+            } else {
+                last = last.prev;
             }
             hash.remove(key);
         }

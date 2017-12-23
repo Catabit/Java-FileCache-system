@@ -71,6 +71,7 @@ public final class Main {
 
         while (commandIterator.hasNext()) {
             String command = commandIterator.next().trim();
+            //System.out.println("Working on: " + command);
             String[] tokens = command.split(" ");
 
             if (command.isEmpty() || command.startsWith("#")) {

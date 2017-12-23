@@ -87,12 +87,7 @@ public class KeyStatsListener<K, V> implements CacheListener<K, V> {
      * @return the list of keys
      */
     public List<K> getTopHitKeys(int top) {
-        List<K> keys = new ArrayList<>();
-        Iterator<Map.Entry<K, Integer>> iter = hits.entrySet().iterator();
-        for (int i = 0; i < top; i++) {
-            keys.add(iter.next().getKey());
-        }
-        return keys;
+        return getFirstEntries(hits, top);
     }
 
     /**
@@ -102,12 +97,7 @@ public class KeyStatsListener<K, V> implements CacheListener<K, V> {
      * @return the list of keys
      */
     public List<K> getTopMissedKeys(int top) {
-        List<K> keys = new ArrayList<>();
-        Iterator<Map.Entry<K, Integer>> iter = misses.entrySet().iterator();
-        for (int i = 0; i < top; i++) {
-            keys.add(iter.next().getKey());
-        }
-        return keys;
+        return getFirstEntries(misses, top);
     }
 
     /**
@@ -117,13 +107,28 @@ public class KeyStatsListener<K, V> implements CacheListener<K, V> {
      * @return the list of keys
      */
     public List<K> getTopUpdatedKeys(int top) {
+        return getFirstEntries(puts, top);
+    }
+
+    /* TODO: implement the CacheListener interface */
+
+    private List<K> getFirstEntries(final TreeMap<K, Integer> map, final int top) {
         List<K> keys = new ArrayList<>();
-        Iterator<Map.Entry<K, Integer>> iter = puts.entrySet().iterator();
+
+        List<Map.Entry<K, Integer>> list = new LinkedList<>(map.entrySet());
+        Collections.sort(list, new Comp());
+        Iterator<Map.Entry<K, Integer>> iter = list.iterator();
+
         for (int i = 0; i < top; i++) {
             keys.add(iter.next().getKey());
         }
         return keys;
     }
 
-    /* TODO: implement the CacheListener interface */
+
+    private class Comp implements Comparator<Map.Entry<K, Integer>> {
+        public int compare(Map.Entry<K, Integer> o1, Map.Entry<K, Integer> o2) {
+            return (-1) * (o1.getValue() - o2.getValue());
+        }
+    }
 }

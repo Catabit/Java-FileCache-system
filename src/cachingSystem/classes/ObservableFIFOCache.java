@@ -26,8 +26,8 @@ public class ObservableFIFOCache<K, V> extends ObservableCache<K, V> {
 
     @Override
     public void put(K key, V value) {
-        clearStaleEntries();
         cache.put(key, value);
+        clearStaleEntries();
         cacheListener.onPut(key, value);
     }
 
