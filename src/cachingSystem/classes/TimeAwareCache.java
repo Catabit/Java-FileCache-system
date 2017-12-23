@@ -1,6 +1,11 @@
 package cachingSystem.classes;
 
+import cachingSystem.interfaces.CacheStalePolicy;
+import dataStructures.classes.Pair;
+
 import java.sql.Timestamp;
+import java.time.Instant;
+import java.util.HashMap;
 
 /**
  * The TimeAwareCache offers the same functionality as the LRUCache, but also stores a timestamp for
@@ -12,6 +17,19 @@ public class TimeAwareCache<K, V> extends LRUCache<K, V> {
 
     /* TODO: figure out which methods need to overridden in order to implement the timestamp
     functionality */
+    private HashMap<K, Timestamp> times = new HashMap<>();
+
+    @Override
+    public void put(K key, V value) {
+        super.put(key, value);
+        setTimestampOfKey(key, Timestamp.from(Instant.now()));
+    }
+
+    @Override
+    public V remove(K key) {
+        times.remove(key);
+        return super.remove(key);
+    }
 
     /**
      * Get the timestamp associated with a key, or null if the key is not stored in the cache.
@@ -20,7 +38,11 @@ public class TimeAwareCache<K, V> extends LRUCache<K, V> {
      * @return the timestamp, or null
      */
     public Timestamp getTimestampOfKey(K key) {
-        /* TODO: implement getTimestampOfKey */
+        return times.get(key);
+    }
+
+    private void setTimestampOfKey(K key, Timestamp t) {
+        times.put(key, t);
     }
 
     /**
@@ -30,6 +52,17 @@ public class TimeAwareCache<K, V> extends LRUCache<K, V> {
      * @param millisToExpire the expiration time, in milliseconds
      */
     public void setExpirePolicy(long millisToExpire) {
-        /* TODO: create a stale policy and set it for the TimeAwareCache */
+        CacheStalePolicy<K, V> stalePolicy = new CacheStalePolicy<K, V>() {
+            @Override
+            public boolean shouldRemoveEldestEntry(Pair<K, V> entry) {
+                long treshHoldTime = Timestamp.from(Instant.now()).getTime();
+                treshHoldTime -= millisToExpire; //todo might require <=
+                if (getTimestampOfKey(entry.getKey()).getTime() < treshHoldTime) {
+                    return true;
+                }
+                return false;
+            }
+        };
+        setStalePolicy(stalePolicy);
     }
 }

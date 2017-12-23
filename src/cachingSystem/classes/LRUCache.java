@@ -1,6 +1,7 @@
 package cachingSystem.classes;
 
 import dataStructures.classes.Pair;
+import observerPattern.interfaces.CacheListener;
 
 import java.util.HashMap;
 
@@ -18,8 +19,10 @@ public class LRUCache<K, V> extends ObservableCache<K, V> {
     @Override
     public V get(K key) {
         if (hash.containsKey(key)) {
+            cacheListener.onHit(key);
             return hash.get(key).info.getValue();
         }
+        cacheListener.onMiss(key);
         return null;
     }
 
@@ -53,6 +56,7 @@ public class LRUCache<K, V> extends ObservableCache<K, V> {
             }
             first = newNode;
         }
+        cacheListener.onPut(key, value);
 
     }
 

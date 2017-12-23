@@ -14,7 +14,7 @@ import observerPattern.interfaces.CacheListener;
 public abstract class ObservableCache<K, V> implements Cache<K, V> {
 
     private CacheStalePolicy<K, V> stalePolicy;
-    private CacheListener<K, V> cacheListener;
+    protected CacheListener<K, V> cacheListener;
 
     /**
      * Set a policy for removing stale elements from the cache.

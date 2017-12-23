@@ -62,6 +62,19 @@ public final class FileCache {
     private CacheListener<String, String> createCacheListener() {
         return new CacheListener<String, String>() {
             /* TODO: implement a listener that loads a file in memory on a cache miss */
+
+            @Override
+            public void onHit(String key) {
+            }
+
+            @Override
+            public void onMiss(String key) {
+
+            }
+
+            @Override
+            public void onPut(String key, String value) {
+            }
         };
     }
 
