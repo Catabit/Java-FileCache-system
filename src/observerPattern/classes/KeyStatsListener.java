@@ -1,6 +1,6 @@
 package observerPattern.classes;
 
-import java.util.List;
+import java.util.*;
 
 import observerPattern.interfaces.CacheListener;
 
@@ -12,20 +12,42 @@ import observerPattern.interfaces.CacheListener;
  */
 public class KeyStatsListener<K, V> implements CacheListener<K, V> {
 
+    private TreeMap<K, Integer> hits = new TreeMap<>(Collections.reverseOrder());
+    private TreeMap<K, Integer> misses = new TreeMap<>(Collections.reverseOrder());
+    private TreeMap<K, Integer> puts = new TreeMap<>(Collections.reverseOrder());
 
     @Override
     public void onHit(K key) {
-
+        int count;
+        if (hits.containsKey(key)) {
+            count = hits.get(key) + 1;
+        } else {
+            count = 1;
+        }
+        hits.put(key, count);
     }
 
     @Override
     public void onMiss(K key) {
+        int count;
+        if (misses.containsKey(key)) {
+            count = misses.get(key) + 1;
+        } else {
+            count = 1;
+        }
+        misses.put(key, count);
 
     }
 
     @Override
     public void onPut(K key, V value) {
-
+        int count;
+        if (puts.containsKey(key)) {
+            count = puts.get(key) + 1;
+        } else {
+            count = 1;
+        }
+        puts.put(key, count);
     }
 
     /**
@@ -35,8 +57,7 @@ public class KeyStatsListener<K, V> implements CacheListener<K, V> {
      * @return number of hits
      */
     public int getKeyHits(K key) {
-        /* TODO: implement getKeyHits */
-        return 0;
+        return hits.get(key);
     }
 
     /**
@@ -46,8 +67,7 @@ public class KeyStatsListener<K, V> implements CacheListener<K, V> {
      * @return number of misses
      */
     public int getKeyMisses(K key) {
-        /* TODO: implement getKeyMisses */
-        return 0;
+        return misses.get(key);
     }
 
     /**
@@ -57,8 +77,7 @@ public class KeyStatsListener<K, V> implements CacheListener<K, V> {
      * @return number of updates
      */
     public int getKeyUpdates(K key) {
-        /* TODO: implement getKeyUpdates */
-        return 0;
+        return puts.get(key);
     }
 
     /**
@@ -68,8 +87,12 @@ public class KeyStatsListener<K, V> implements CacheListener<K, V> {
      * @return the list of keys
      */
     public List<K> getTopHitKeys(int top) {
-        /* TODO: implement getTopHitKeys */
-        return null;
+        List<K> keys = new ArrayList<>();
+        Iterator<Map.Entry<K, Integer>> iter = hits.entrySet().iterator();
+        for (int i = 0; i < top; i++) {
+            keys.add(iter.next().getKey());
+        }
+        return keys;
     }
 
     /**
@@ -79,8 +102,12 @@ public class KeyStatsListener<K, V> implements CacheListener<K, V> {
      * @return the list of keys
      */
     public List<K> getTopMissedKeys(int top) {
-        /* TODO: implement getTopMissedKeys */
-        return null;
+        List<K> keys = new ArrayList<>();
+        Iterator<Map.Entry<K, Integer>> iter = misses.entrySet().iterator();
+        for (int i = 0; i < top; i++) {
+            keys.add(iter.next().getKey());
+        }
+        return keys;
     }
 
     /**
@@ -90,8 +117,12 @@ public class KeyStatsListener<K, V> implements CacheListener<K, V> {
      * @return the list of keys
      */
     public List<K> getTopUpdatedKeys(int top) {
-        /* TODO: implement getTopUpdatedKeys */
-        return null;
+        List<K> keys = new ArrayList<>();
+        Iterator<Map.Entry<K, Integer>> iter = puts.entrySet().iterator();
+        for (int i = 0; i < top; i++) {
+            keys.add(iter.next().getKey());
+        }
+        return keys;
     }
 
     /* TODO: implement the CacheListener interface */
