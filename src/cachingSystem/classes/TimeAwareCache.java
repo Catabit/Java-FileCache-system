@@ -15,8 +15,6 @@ import java.util.HashMap;
  */
 public class TimeAwareCache<K, V> extends LRUCache<K, V> {
 
-    /* TODO: figure out which methods need to overridden in order to implement the timestamp
-    functionality */
     private HashMap<K, Timestamp> times = new HashMap<>();
 
     @Override

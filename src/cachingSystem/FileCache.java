@@ -9,7 +9,6 @@ import dataStructures.classes.Pair;
 import observerPattern.classes.BroadcastListener;
 import observerPattern.interfaces.CacheListener;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.Reader;
@@ -66,7 +65,6 @@ public final class FileCache {
 
     private CacheListener<String, String> createCacheListener() {
         return new CacheListener<String, String>() {
-            /* TODO: implement a listener that loads a file in memory on a cache miss */
 
             @Override
             public void onHit(String key) {

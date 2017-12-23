@@ -1,6 +1,5 @@
 package observerPattern.classes;
 
-import cachingSystem.interfaces.Cache;
 import observerPattern.interfaces.CacheListener;
 
 import java.util.ArrayList;
@@ -11,7 +10,7 @@ import java.util.List;
  */
 public class BroadcastListener<K, V> implements CacheListener<K, V> {
 
-    List<CacheListener<K, V>> listeners = new ArrayList<>();
+    private List<CacheListener<K, V>> listeners = new ArrayList<>();
 
     /**
      * Add a listener to the broadcast list.
@@ -42,6 +41,4 @@ public class BroadcastListener<K, V> implements CacheListener<K, V> {
             listener.onPut(key, value);
         }
     }
-
-    /* TODO: implement the CacheListener interface */
 }

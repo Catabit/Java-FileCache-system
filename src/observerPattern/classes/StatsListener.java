@@ -56,5 +56,4 @@ public class StatsListener<K, V> implements CacheListener<K, V> {
         return puts;
     }
 
-    /* TODO: Implement the CacheListener interface */
 }

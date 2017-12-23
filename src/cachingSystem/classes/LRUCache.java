@@ -1,7 +1,6 @@
 package cachingSystem.classes;
 
 import dataStructures.classes.Pair;
-import observerPattern.interfaces.CacheListener;
 
 import java.util.HashMap;
 
@@ -131,7 +130,6 @@ public class LRUCache<K, V> extends ObservableCache<K, V> {
         return last.info;
     }
 
-    /* TODO: implement the methods from ObservableCache and Cache */
 
     private final class Node {
         private Node next, prev;
