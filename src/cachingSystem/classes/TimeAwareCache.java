@@ -50,7 +50,7 @@ public class TimeAwareCache<K, V> extends LRUCache<K, V> {
      * @param key the key
      * @return the timestamp, or null
      */
-    private Timestamp getTimestampOfKey(K key) {
+    public Timestamp getTimestampOfKey(K key) {
         return times.get(key);
     }
 
