@@ -14,18 +14,33 @@ public class StatsListener<K, V> implements CacheListener<K, V> {
     private int misses = 0;
     private int puts = 0;
 
+    /**
+     * Increments the total hits counter for the cache.
+     *
+     * @param key the key
+     */
     @Override
-    public void onHit(K key) {
+    public void onHit(final K key) {
         hits++;
     }
 
+    /**
+     * Increments the total misses counter for the cache.
+     *
+     * @param key the key
+     */
     @Override
-    public void onMiss(K key) {
+    public void onMiss(final K key) {
         misses++;
     }
 
+    /**
+     * Increments the total puts counter for the cache.
+     *
+     * @param key the key
+     */
     @Override
-    public void onPut(K key, V value) {
+    public void onPut(final K key, final V value) {
         puts++;
     }
 

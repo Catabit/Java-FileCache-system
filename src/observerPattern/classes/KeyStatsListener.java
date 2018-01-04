@@ -23,8 +23,13 @@ public class KeyStatsListener<K, V> implements CacheListener<K, V> {
     private TreeMap<K, Integer> misses = new TreeMap<>(Collections.reverseOrder());
     private TreeMap<K, Integer> puts = new TreeMap<>(Collections.reverseOrder());
 
+    /**
+     * Increments the count for the specified key in the hits map.
+     *
+     * @param key the key
+     */
     @Override
-    public void onHit(K key) {
+    public void onHit(final K key) {
         int count;
         if (hits.containsKey(key)) {
             count = hits.get(key) + 1;
@@ -34,8 +39,13 @@ public class KeyStatsListener<K, V> implements CacheListener<K, V> {
         hits.put(key, count);
     }
 
+    /**
+     * Increments the count for the specified key in the misses map.
+     *
+     * @param key the key
+     */
     @Override
-    public void onMiss(K key) {
+    public void onMiss(final K key) {
         int count;
         if (misses.containsKey(key)) {
             count = misses.get(key) + 1;
@@ -46,8 +56,13 @@ public class KeyStatsListener<K, V> implements CacheListener<K, V> {
 
     }
 
+    /**
+     * Increments the count for the specified key in the puts map.
+     *
+     * @param key the key
+     */
     @Override
-    public void onPut(K key, V value) {
+    public void onPut(final K key, final V value) {
         int count;
         if (puts.containsKey(key)) {
             count = puts.get(key) + 1;
@@ -63,7 +78,7 @@ public class KeyStatsListener<K, V> implements CacheListener<K, V> {
      * @param key the key
      * @return number of hits
      */
-    public int getKeyHits(K key) {
+    public int getKeyHits(final K key) {
         return hits.get(key);
     }
 
@@ -73,7 +88,7 @@ public class KeyStatsListener<K, V> implements CacheListener<K, V> {
      * @param key the key
      * @return number of misses
      */
-    public int getKeyMisses(K key) {
+    public int getKeyMisses(final K key) {
         return misses.get(key);
     }
 
@@ -83,7 +98,7 @@ public class KeyStatsListener<K, V> implements CacheListener<K, V> {
      * @param key the key
      * @return number of updates
      */
-    public int getKeyUpdates(K key) {
+    public int getKeyUpdates(final K key) {
         return puts.get(key);
     }
 
@@ -93,7 +108,7 @@ public class KeyStatsListener<K, V> implements CacheListener<K, V> {
      * @param top number of top keys
      * @return the list of keys
      */
-    public List<K> getTopHitKeys(int top) {
+    public List<K> getTopHitKeys(final int top) {
         return getFirstEntries(hits, top);
     }
 
@@ -103,7 +118,7 @@ public class KeyStatsListener<K, V> implements CacheListener<K, V> {
      * @param top number of top keys
      * @return the list of keys
      */
-    public List<K> getTopMissedKeys(int top) {
+    public List<K> getTopMissedKeys(final int top) {
         return getFirstEntries(misses, top);
     }
 
@@ -113,7 +128,7 @@ public class KeyStatsListener<K, V> implements CacheListener<K, V> {
      * @param top number of top keys
      * @return the list of keys
      */
-    public List<K> getTopUpdatedKeys(int top) {
+    public List<K> getTopUpdatedKeys(final int top) {
         return getFirstEntries(puts, top);
     }
 
@@ -133,7 +148,7 @@ public class KeyStatsListener<K, V> implements CacheListener<K, V> {
 
 
     private class Comp implements Comparator<Map.Entry<K, Integer>> {
-        public int compare(Map.Entry<K, Integer> o1, Map.Entry<K, Integer> o2) {
+        public int compare(final Map.Entry<K, Integer> o1, final Map.Entry<K, Integer> o2) {
             return (-1) * (o1.getValue() - o2.getValue());
         }
     }

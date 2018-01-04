@@ -16,8 +16,17 @@ public class TimeAwareCache<K, V> extends LRUCache<K, V> {
 
     private TreeMap<K, Timestamp> times = new TreeMap<>();
 
+    /**
+     * Inserts the new key-value pair if it does not exist or it updates the contents. Either way
+     * the item will be considered the most recently used and will be moved to the front of the
+     * list. A timestamp is added or updated for the said pair.
+     * Sends onPut.
+     *
+     * @param key   the key
+     * @param value the value
+     */
     @Override
-    public void put(K key, V value) {
+    public void put(final K key, final V value) {
         if (!times.containsKey(key)) {
             setTimestampOfKey(key, new Timestamp(System.currentTimeMillis()));
             super.put(key, value);
@@ -28,18 +37,32 @@ public class TimeAwareCache<K, V> extends LRUCache<K, V> {
         clearStaleEntries();
     }
 
+    /**
+     * Removes the key-value pair.
+     *
+     * @param key the key to be removed
+     * @return the value
+     */
     @Override
-    public V remove(K key) {
+    public V remove(final K key) {
         times.remove(key);
         return super.remove(key);
     }
 
+    /**
+     * Gets the value assigned to the key and moves the item to the front of the list so that it is
+     * not removed (not considered stale). Updates the timestamp assigned to the key.
+     * Sends out a onMiss event if the key is not found, and an onHit if it is found.
+     *
+     * @param key the key to lookup
+     * @return the value
+     */
     @Override
-    public V get(K key) {
+    public V get(final K key) {
         if (!isEmpty()) {
             clearStaleEntries();
         }
-        //setTimestampOfKey(key, new Timestamp(System.currentTimeMillis()));
+        setTimestampOfKey(key, new Timestamp(System.currentTimeMillis()));
         return super.get(key);
     }
 
@@ -50,11 +73,11 @@ public class TimeAwareCache<K, V> extends LRUCache<K, V> {
      * @param key the key
      * @return the timestamp, or null
      */
-    public Timestamp getTimestampOfKey(K key) {
+    public Timestamp getTimestampOfKey(final K key) {
         return times.get(key);
     }
 
-    private void setTimestampOfKey(K key, Timestamp t) {
+    private void setTimestampOfKey(final K key, final Timestamp t) {
         times.put(key, t);
     }
 
@@ -64,10 +87,10 @@ public class TimeAwareCache<K, V> extends LRUCache<K, V> {
      *
      * @param millisToExpire the expiration time, in milliseconds
      */
-    public void setExpirePolicy(long millisToExpire) {
+    public void setExpirePolicy(final long millisToExpire) {
         CacheStalePolicy<K, V> stalePolicy = new CacheStalePolicy<K, V>() {
             @Override
-            public boolean shouldRemoveEldestEntry(Pair<K, V> entry) {
+            public boolean shouldRemoveEldestEntry(final Pair<K, V> entry) {
                 if (entry == null) {
                     return false;
                 }

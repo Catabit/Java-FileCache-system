@@ -21,7 +21,8 @@ public final class FileCache {
     }
 
     public static cachingSystem.FileCache createCacheWithCapacity(
-            cachingSystem.FileCache.Strategy strategy, int capacity) {
+            final cachingSystem.FileCache.Strategy strategy,
+            final int capacity) {
         ObservableCache<String, String> dataCache;
 
         switch (strategy) {
@@ -38,7 +39,7 @@ public final class FileCache {
 
         dataCache.setStalePolicy(new CacheStalePolicy<String, String>() {
             @Override
-            public boolean shouldRemoveEldestEntry(Pair<String, String> entry) {
+            public boolean shouldRemoveEldestEntry(final Pair<String, String> entry) {
                 return dataCache.size() > capacity;
             }
         });
@@ -46,7 +47,7 @@ public final class FileCache {
         return new cachingSystem.FileCache(dataCache);
     }
 
-    public static cachingSystem.FileCache createCacheWithExpiration(long millisToExpire) {
+    public static cachingSystem.FileCache createCacheWithExpiration(final long millisToExpire) {
         TimeAwareCache<String, String> dataCache = new TimeAwareCache<>();
 
         dataCache.setExpirePolicy(millisToExpire);
@@ -54,7 +55,7 @@ public final class FileCache {
         return new cachingSystem.FileCache(dataCache);
     }
 
-    private FileCache(ObservableCache<String, String> dataCache) {
+    private FileCache(final ObservableCache<String, String> dataCache) {
         this.dataCache = dataCache;
         this.broadcastListener = new BroadcastListener<>();
 
@@ -67,11 +68,11 @@ public final class FileCache {
         return new CacheListener<String, String>() {
 
             @Override
-            public void onHit(String key) {
+            public void onHit(final String key) {
             }
 
             @Override
-            public void onMiss(String key) {
+            public void onMiss(final String key) {
                 try {
                     Reader fr = new FileReader(key);
                     StringBuilder sb = new StringBuilder();
@@ -90,12 +91,12 @@ public final class FileCache {
             }
 
             @Override
-            public void onPut(String key, String value) {
+            public void onPut(final String key, final String value) {
             }
         };
     }
 
-    public String getFileContents(String path) {
+    public String getFileContents(final String path) {
         String fileContents;
 
         do {
@@ -105,11 +106,11 @@ public final class FileCache {
         return fileContents;
     }
 
-    public void putFileContents(String path, String contents) {
+    public void putFileContents(final String path, final String contents) {
         dataCache.put(path, contents);
     }
 
-    public void addListener(CacheListener<String, String> listener) {
+    public void addListener(final CacheListener<String, String> listener) {
         broadcastListener.addListener(listener);
     }
 

@@ -21,7 +21,7 @@ public abstract class ObservableCache<K, V> implements Cache<K, V> {
      *
      * @param stalePolicy
      */
-    public void setStalePolicy(CacheStalePolicy<K, V> stalePolicy) {
+    public void setStalePolicy(final CacheStalePolicy<K, V> stalePolicy) {
         this.stalePolicy = stalePolicy;
     }
 
@@ -30,7 +30,7 @@ public abstract class ObservableCache<K, V> implements Cache<K, V> {
      *
      * @param cacheListener
      */
-    public void setCacheListener(CacheListener<K, V> cacheListener) {
+    public void setCacheListener(final CacheListener<K, V> cacheListener) {
         this.cacheListener = cacheListener;
     }
 

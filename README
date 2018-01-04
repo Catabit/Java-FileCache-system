@@ -1,5 +1,29 @@
 Tema 3 - POO
 
+ObservableFIFOCache
+Aceasta clasa extinde functionalitatea clasei FIFOCache prin transmiterea de evenimente de tipul onHit/Miss/Put in cadrul
+metodelor get si put.
+
+LRUCache
+Prin implementarea proprie a unei liste dublu inlantuite si prin utilizarea unui HashMap<cheie, nod_lista> se obtine
+performanta la citire O(1) si se pastreaza ordinea elementelor, fiind usoara eliminarea celui mai vechi la depasirea
+capacitatii maxime a Cache-ului (va fi mereu elementul 'last').
+
+TimeAwareCache
+Este o extensie a LRU cu aditia unui nou HashMap<cheie, timestamp> cu rol in eliminarea elementelor expirate.
+
+BroadcastListener
+Un listener ce implementeaza modelul subscriber-publisher prin faptul ca trimite evenimentele onHit/Miss/Put mai departe
+spre o lista de alti listeneri.
+
+StatsListener
+Acest listener tine evidenta generala, globala, a evenimentelor onHit, onMiss si onPut.
+
+KeyStatsListener
+Acest listener se foloseste de 3 TreeMap-uri <cheie, Integer count> prin care fiecarei chei ii este contorizat numarul
+de evenimente discrete primite. Primele n elemente se obtin prin sortarea unuia din cele 3 TreeMap-uri si prin extragerea
+primelor n chei. Metoda getFirstEntries face intocmai acest lucru, dar are ca parametru orice TreeMap de genul
+<cheie, Integer> (previne codul duplicat).
 
 Bitire Catalin-Constantin
 325CD
